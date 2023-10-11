@@ -155,22 +155,15 @@ This function returns the total potential energy of the system. */
         if (rij.sq < r_cutsq)
         // Compute forces if the distance is smaller than the cutoff distance
         {
-            // pair forces are given by the LJ interaction
-            /*sr2 = sigmasq / rij.sq;
-            sr6 = sr2 * sr2 * sr2;
-            sr12 = sr6 * sr6;
-            Epot += 4.0 * epsilon * (sr12 - sr6 - Epot_cutoff);
-            fr = 24.0 * epsilon * (2.0 * sr12 - sr6) / rij.sq; //force divided by distance
-            */
-            Epot_cutoff = 0.5*r_cutsq - p_parameters->r_cut;
-            dist = sqrt(rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
+            Epot_cutoff = p_parameters->r_cut - 0.5*r_cutsq;
+            dist = sqrt(rij.sq);
             fr = a*(1-dist)/dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;
             
-            Epot += a*(0.5*rij.sq - dist - Epot_cutoff);
-
+            Epot += -a*((dist-p_parameters->r_cut) - 0.5*(rij.sq-r_cutsq));
+            //Epot+= 0.5*a*(dist-p_parameters->r_cut)*(dist-p_parameters->r_cut);
             f[i].x += df.x;
             f[i].y += df.y;
             f[i].z += df.z;
@@ -197,7 +190,7 @@ This function returns the total potential energy of the system. */
 
             // For the random force
             dzeta = generate_uniform_random();
-            fr = 0;//sigma*(1-dist)*dzeta*(1/sqrt(dt))/dist;
+            fr = sigma*(1-dist)*dzeta*(1/sqrt(dt))/dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;
