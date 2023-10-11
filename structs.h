@@ -31,6 +31,7 @@ struct Parameters
     double r_cut;            //!< Cut-off distance for LJ interaction
     double r_shell;          //!< Shell thickness for neighbor list
     double a;
+    double gamma;
     size_t num_dt_pdb;       //!< Number of time steps between pdb saves
     double rescale_output;   //!< Rescale factor for outputted positions
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
@@ -96,6 +97,7 @@ struct Pair
 {
     size_t i, j; //!< indices of the two particles forming a pair
     struct DeltaR rij; //!< The connecting vector between the pairs rij = r[i]-r[j] corrected for periodicity
+    struct DeltaR vij; //The Velocity difference between the particles. 
 };
 
 /**

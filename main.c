@@ -74,14 +74,14 @@ int main(void)
         step++;
         time += parameters.dt;
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
-        thermostat(&parameters, &vectors, Ekin);
+        //thermostat(&parameters, &vectors, Ekin);
         update_positions(&parameters, &nbrlist, &vectors);
         boundary_conditions(&parameters, &vectors);
         update_nbrlist(&parameters, &vectors, &nbrlist);
         Epot = calculate_forces(&parameters, &nbrlist, &vectors);
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
         fprintf(MD,"%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
-        //printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
+        printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
         if (step % parameters.num_dt_pdb == 0) record_trajectories_pdb(0, &parameters, &vectors, time);
         if (step % parameters.num_dt_restart == 0) save_restart(&parameters,&vectors); 
     }

@@ -305,6 +305,7 @@ int update_nbrlist(struct Parameters *p_parameters, struct Vectors *p_vectors, s
     const double dr_sq_max = 0.25 * (p_parameters->r_shell * p_parameters->r_shell);
     int isRebuild = 0;
     struct DeltaR rij;
+    struct DeltaR vij;
     struct Pair *nbr = p_nbrlist->nbr;
     struct Vec3D *dr = p_vectors->dr;
     // The neighbor list needs to be rebuild if one of the particles has displaced more then 0.5*r_shell
@@ -327,6 +328,17 @@ int update_nbrlist(struct Parameters *p_parameters, struct Vectors *p_vectors, s
             rij.z += (dr[i].z - dr[j].z);
             rij.sq = rij.x * rij.x + rij.y * rij.y + rij.z * rij.z;
             p_nbrlist->nbr[k].rij = rij;
+
+            struct Vec3D vi = p_vectors->v[i];
+            struct Vec3D vj = p_vectors->v[j];
+            
+            vij.x = vi.x - vj.x;
+            vij.y = vi.y - vj.y;
+            vij.z = vi.z - vj.z;
+            vij.sq = vij.x * vij.x + vij.y * vij.y + vij.z * vij.z;
+
+            p_nbrlist->nbr[k].vij = vij;
+
         }
     }
     return isRebuild;

@@ -131,6 +131,7 @@ This function returns the total potential energy of the system. */
     struct Vec3D df;
     double r_cutsq, sigmasq, sr2, sr6, sr12, fr, prefctr, a, dist;
     struct DeltaR rij;
+    struct DeltaR vij;
     struct Pair *nbr = p_nbrlist->nbr;
     const size_t num_nbrs = p_nbrlist->num_nbrs;
     struct Vec3D *f = p_vectors->f;
@@ -150,6 +151,7 @@ This function returns the total potential energy of the system. */
     {
         // for each pair in the neighbor list compute the pair forces
         rij = nbr[k].rij;
+        vij = nbr[k].vij;
         size_t i = nbr[k].i;
         size_t j = nbr[k].j;
         if (rij.sq < r_cutsq)
@@ -162,14 +164,31 @@ This function returns the total potential energy of the system. */
             Epot += 4.0 * epsilon * (sr12 - sr6 - Epot_cutoff);
             fr = 24.0 * epsilon * (2.0 * sr12 - sr6) / rij.sq; //force divided by distance
             */
-            Epot_cutoff = 0.5*r_cutsq*r_cutsq - r_cutsq*dist;
+            Epot_cutoff = 0.5*r_cutsq - p_parameters->r_cut;
             dist = sqrt(rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
-            fr = a*(1-rij.sq)/dist;
+            fr = a*(1-dist)/dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;
             
-            Epot += a*(0.5*rij.sq*rij.sq - rij.sq*dist - Epot_cutoff);
+            Epot += a*(0.5*rij.sq - dist - Epot_cutoff);
+
+            f[i].x += df.x;
+            f[i].y += df.y;
+            f[i].z += df.z;
+            f[j].x -= df.x;
+            f[j].y -= df.y;
+            f[j].z -= df.z;
+
+            // Now for the disapative force
+            
+            double dotProduct = (rij.x*vij.x) + (rij.y*vij.y) + (rij.z*vij.z);
+
+            fr = -p_parameters->gamma * pow(1 - dist,2)*dotProduct/dist/dist;
+
+            df.x = fr * rij.x;
+            df.y = fr * rij.y;
+            df.z = fr * rij.z;
 
             f[i].x += df.x;
             f[i].y += df.y;

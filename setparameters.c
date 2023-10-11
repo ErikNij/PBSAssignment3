@@ -14,8 +14,9 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->epsilon = 1.0;                              //LJ interaction strength
   p_parameters->sigma = 1.0;                                //LJ particle diameter
   p_parameters->a = 1.0;
+  p_parameters->gamma = 4.5;
 // The parameters below control core functionalities of the code, but many values will need to be changed
-  p_parameters->num_part = 2000;                            //number of particles
+  p_parameters->num_part = 200;                            //number of particles
   p_parameters->num_dt_steps = 2000;                        //number of time steps
   p_parameters->exclude_12_nb = 1;                          // 1-2 connected atoms exluded from non-bonded interactions 
   p_parameters->exclude_13_nb = 1;                          // 1-3 connected atoms exluded from non-bonded interactions    
