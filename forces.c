@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "structs.h"
 #include "nbrlist.h"
+#include "random.h"
 
 double calculate_forces(struct Parameters *p_parameters, struct Nbrlist *p_nbrlist, struct Vectors *p_vectors)
 {
@@ -129,7 +130,7 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
 This function returns the total potential energy of the system. */
 {
     struct Vec3D df;
-    double r_cutsq, sigmasq, sr2, sr6, sr12, fr, prefctr, a, dist;
+    double r_cutsq, fr, a, dist, dzeta, sigma, dt;
     struct DeltaR rij;
     struct DeltaR vij;
     struct Pair *nbr = p_nbrlist->nbr;
@@ -138,14 +139,11 @@ This function returns the total potential energy of the system. */
     size_t num_part = p_parameters->num_part;
     a = p_parameters->a;
     r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
-    sigmasq = p_parameters->sigma * p_parameters->sigma;
     double epsilon = p_parameters->epsilon;
-
+    sigma = p_parameters->sigma;
+    dt = p_parameters->dt;
     double Epot = 0.0, Epot_cutoff;
-    sr2 = sigmasq / r_cutsq;
-    sr6 = sr2 * sr2 * sr2;
-    sr12 = sr6 * sr6;
-    Epot_cutoff = sr12 - sr6;
+
 
     for (size_t k = 0; k < num_nbrs; k++)
     {
@@ -186,6 +184,20 @@ This function returns the total potential energy of the system. */
 
             fr = -p_parameters->gamma * pow(1 - dist,2)*dotProduct/dist/dist;
 
+            df.x = fr * rij.x;
+            df.y = fr * rij.y;
+            df.z = fr * rij.z;
+
+            f[i].x += df.x;
+            f[i].y += df.y;
+            f[i].z += df.z;
+            f[j].x -= df.x;
+            f[j].y -= df.y;
+            f[j].z -= df.z;
+
+            // For the random force
+            dzeta = generate_uniform_random();
+            fr = 0;//sigma*(1-dist)*dzeta*(1/sqrt(dt))/dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;

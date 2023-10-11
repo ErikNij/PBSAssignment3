@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 double generate_uniform_random(void)
 /* Generate a uniform random number between 0 and 1, inclusive */

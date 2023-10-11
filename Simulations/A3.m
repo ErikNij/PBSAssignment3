@@ -1,7 +1,7 @@
 close all
 clear
 clc
-data = readtable("exp.txt");
+data = readtable("longer.txt");
 
 
 % Extract the columns of interest (columns 6, 9, and 11)
