@@ -129,13 +129,13 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
 This function returns the total potential energy of the system. */
 {
     struct Vec3D df;
-    double r_cutsq, sigmasq, sr2, sr6, sr12, fr, prefctr;
+    double r_cutsq, sigmasq, sr2, sr6, sr12, fr, prefctr, a, dist;
     struct DeltaR rij;
     struct Pair *nbr = p_nbrlist->nbr;
     const size_t num_nbrs = p_nbrlist->num_nbrs;
     struct Vec3D *f = p_vectors->f;
     size_t num_part = p_parameters->num_part;
-
+    a = p_parameters->a;
     r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
     sigmasq = p_parameters->sigma * p_parameters->sigma;
     double epsilon = p_parameters->epsilon;
@@ -156,14 +156,21 @@ This function returns the total potential energy of the system. */
         // Compute forces if the distance is smaller than the cutoff distance
         {
             // pair forces are given by the LJ interaction
-            sr2 = sigmasq / rij.sq;
+            /*sr2 = sigmasq / rij.sq;
             sr6 = sr2 * sr2 * sr2;
             sr12 = sr6 * sr6;
             Epot += 4.0 * epsilon * (sr12 - sr6 - Epot_cutoff);
             fr = 24.0 * epsilon * (2.0 * sr12 - sr6) / rij.sq; //force divided by distance
+            */
+            Epot_cutoff = 0.5*r_cutsq*r_cutsq - r_cutsq*dist;
+            dist = sqrt(rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
+            fr = a*(1-rij.sq)/dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;
+            
+            Epot += a*(0.5*rij.sq*rij.sq - rij.sq*dist - Epot_cutoff);
+
             f[i].x += df.x;
             f[i].y += df.y;
             f[i].z += df.z;

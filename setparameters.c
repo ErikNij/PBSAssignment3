@@ -13,7 +13,7 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->mass = 1.0;                                 //mass of a particle
   p_parameters->epsilon = 1.0;                              //LJ interaction strength
   p_parameters->sigma = 1.0;                                //LJ particle diameter
-
+  p_parameters->a = 1.0;
 // The parameters below control core functionalities of the code, but many values will need to be changed
   p_parameters->num_part = 2000;                            //number of particles
   p_parameters->num_dt_steps = 2000;                        //number of time steps

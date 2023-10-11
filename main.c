@@ -51,6 +51,9 @@ int main(void)
     size_t step;
     double Ekin, Epot, time;
 
+    FILE *MD = NULL;
+	MD= fopen("exp.txt","w");
+    fprintf(MD, "Step,\tt,\t\tEkin,\t\tEpot,\t\tEtot,\n");
     set_parameters(&parameters);
     alloc_memory(&parameters, &vectors, &nbrlist);
     if (parameters.load_restart == 1)
@@ -77,8 +80,8 @@ int main(void)
         update_nbrlist(&parameters, &vectors, &nbrlist);
         Epot = calculate_forces(&parameters, &nbrlist, &vectors);
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
-
-        printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
+        fprintf(MD,"%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
+        //printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
         if (step % parameters.num_dt_pdb == 0) record_trajectories_pdb(0, &parameters, &vectors, time);
         if (step % parameters.num_dt_restart == 0) save_restart(&parameters,&vectors); 
     }

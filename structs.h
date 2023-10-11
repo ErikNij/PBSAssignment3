@@ -30,6 +30,7 @@ struct Parameters
     double sigma;            //!< LJ particle diameter
     double r_cut;            //!< Cut-off distance for LJ interaction
     double r_shell;          //!< Shell thickness for neighbor list
+    double a;
     size_t num_dt_pdb;       //!< Number of time steps between pdb saves
     double rescale_output;   //!< Rescale factor for outputted positions
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
