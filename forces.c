@@ -190,8 +190,6 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
-<<<<<<< Updated upstream
-=======
             
 
             // For the random force
@@ -207,7 +205,6 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
->>>>>>> Stashed changes
         }
     }
 
