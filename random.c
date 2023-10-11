@@ -5,9 +5,13 @@ double generate_uniform_random(void)
 /* Generate a uniform random number between 0 and 1, inclusive */
 /* Note: this is NOT the best random number out there, but it's quick and simple */
 {
-  double r;
-  r = (double)rand() / (double)RAND_MAX;
-  return r;
+{
+  double dzeta;
+  //srand(time(0));
+  double Bottom = -sqrt(3);
+  dzeta = Bottom + (((double)rand() / (double)RAND_MAX)*2*sqrt(3));
+  return dzeta;
+}
 }
 
 double gauss(void)
