@@ -18,6 +18,7 @@ struct Vec3D
  */
 struct Parameters
 {
+    int N;                   //!< Number of particles in a bonded set
     size_t num_part;         //!< Number of particles
     size_t num_dt_steps;     //!< Number of time steps
     double dt;               //!< integration time step

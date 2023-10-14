@@ -14,13 +14,21 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
 
 void initialise_bond_connectivity(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    size_t num_bonds = 0;
+    size_t num_bonds = p_parameters->num_part  - (p_parameters->num_part/p_parameters->N);
     struct Bond *bonds = (struct Bond *)malloc(num_bonds * sizeof(struct Bond));
+    size_t k = 0; //This will index the bonds
 
-    /* 
-        Provide code to specify bonds as pairs of particles: bond[k].i and bond[k].j
-    */
-
+    for (size_t i = 0; i < p_parameters->num_part; i++)
+    {
+        if (i % p_parameters->N != 0)
+        {
+            bonds[k].i = i;
+            bonds[k].j = i-1;
+            //printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
+            k++;
+        }
+    }
+    num_bonds = k;
     p_vectors->num_bonds = num_bonds;
     p_vectors->bonds = bonds;
 }
@@ -186,12 +194,14 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     n.i = (int)ceil(p_parameters->L.x / dl);
     n.j = (int)ceil(p_parameters->L.y / dl);
     n.k = (int)ceil(p_parameters->L.z / dl);
-    dr.x = p_parameters->L.x / (double)n.i;
-    dr.y = p_parameters->L.y / (double)n.j;
-    dr.z = p_parameters->L.z / (double)n.k;
+    dr.x = 0.8 * p_parameters->L.x / (double)n.i;
+    dr.y = 0.8 * p_parameters->L.y / (double)n.j;
+    dr.z = 0.8 * p_parameters->L.z / (double)n.k;
     ipart = 0;
     for (size_t i = 0; i < n.i; ++i)
-        for (size_t j = 0; j < n.j; ++j)
+    {
+        for (size_t j = 0; j < n.j; j = j + 2)
+        {
             for (size_t k = 0; k < n.k; ++k, ++ipart)
             {
                 if (ipart >= p_parameters->num_part)
@@ -199,10 +209,40 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
                 p_vectors->r[ipart].x = (i + 0.5) * dr.x;
                 p_vectors->r[ipart].y = (j + 0.5) * dr.y;
                 p_vectors->r[ipart].z = (k + 0.5) * dr.z;
-                //      p_vectors->r[ipart].x = p_parameters->L.x*generate_uniform_random();
-                //      p_vectors->r[ipart].y = p_parameters->L.y*generate_uniform_random();
-                //      p_vectors->r[ipart].z = p_parameters->L.z*generate_uniform_random();
+                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
             }
+            for (size_t k = 0; k < n.k; ++k, ++ipart)
+            {
+                if (ipart >= p_parameters->num_part)
+                    break;
+                p_vectors->r[ipart].x = (i + 0.5) * dr.x;
+                p_vectors->r[ipart].y = (j + 0.5 + 1) * dr.y;
+                p_vectors->r[ipart].z = (n.k - k + 0.5) * dr.z;
+                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+            }
+        }
+        for (size_t j = 0; j < n.j; j = j + 2)
+        {
+            for (size_t k = 0; k < n.k; ++k, ++ipart)
+            {
+                if (ipart >= p_parameters->num_part)
+                    break;
+                p_vectors->r[ipart].x = (i + 0.5 + 1) * dr.x;
+                p_vectors->r[ipart].y = (n.j - j + 0.5) * dr.y;
+                p_vectors->r[ipart].z = (k + 0.5) * dr.z;
+                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+            }
+            for (size_t k = 0; k < n.k; ++k, ++ipart)
+            {
+                if (ipart >= p_parameters->num_part)
+                    break;
+                p_vectors->r[ipart].x = (i + 0.5 + 1) * dr.x;
+                p_vectors->r[ipart].y = (n.j - j + 0.5 - 1) * dr.y;
+                p_vectors->r[ipart].z = (n.k - k + 0.5) * dr.z;
+                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+            }
+        }
+    }
 }
 
 void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_vectors)

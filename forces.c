@@ -43,10 +43,9 @@ double calculate_forces_bond(struct Parameters *p_parameters, struct Vectors *p_
         rij.y = rij.y - L.y*floor(rij.y/L.y+0.5); 
         rij.z = r[i].z - r[j].z;
         rij.z = rij.z - L.z*floor(rij.z/L.z+0.5);
-
-        /*
-            Here provide the force calculation
-        */
+        fi.x = -2 * rij.x;
+        fi.y = -2 * rij.y;
+        fi.z = -2 * rij.z;
 
         f[i].x += fi.x;
         f[i].y += fi.y;
@@ -54,6 +53,8 @@ double calculate_forces_bond(struct Parameters *p_parameters, struct Vectors *p_
         f[j].x -= fi.x;
         f[j].y -= fi.y;
         f[j].z -= fi.z;
+
+        Epot =+ 0;
     }
     return Epot;
 }

@@ -1,7 +1,7 @@
 close all
 clear
 clc
-data = readtable("exp.txt");
+data = readtable("C:\Users\20191255\Documents\GitHub\PBSAssignment3\exp.txt");
 
 
 % Extract the columns of interest (columns 6, 9, and 11)
