@@ -14,17 +14,17 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
 
 void initialise_bond_connectivity(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    size_t num_bonds = p_parameters->num_part  - (p_parameters->num_part/p_parameters->N);
+    size_t num_bonds = p_parameters->num_part - (p_parameters->num_part / p_parameters->N);
     struct Bond *bonds = (struct Bond *)malloc(num_bonds * sizeof(struct Bond));
-    size_t k = 0; //This will index the bonds
+    size_t k = 0; // This will index the bonds
 
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
         if (i % p_parameters->N != 0)
         {
             bonds[k].i = i;
-            bonds[k].j = i-1;
-            //printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
+            bonds[k].j = i - 1;
+            // printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
             k++;
         }
     }
@@ -81,7 +81,7 @@ void initialise_structure(struct Parameters *p_parameters, struct Vectors *p_vec
     {
         num_dihdr += (head12[bonds[i].i + 1] - head12[bonds[i].i] - 1) * (head12[bonds[i].j + 1] - head12[bonds[i].j] - 1);
     }
-    struct Dihedral *dihedrals = (struct Dihedral *) malloc(num_dihdr * sizeof(struct Dihedral));
+    struct Dihedral *dihedrals = (struct Dihedral *)malloc(num_dihdr * sizeof(struct Dihedral));
     size_t k = 0;
     for (size_t i = 0; i < num_bonds; ++i)
     {
@@ -198,7 +198,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     dr.y = 0.8 * p_parameters->L.y / (double)n.j;
     dr.z = 0.8 * p_parameters->L.z / (double)n.k;
     ipart = 0;
-    for (size_t i = 0; i < n.i; ++i)
+    for (size_t i = 0; i < n.i; i = i + 2)
     {
         for (size_t j = 0; j < n.j; j = j + 2)
         {
@@ -209,7 +209,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
                 p_vectors->r[ipart].x = (i + 0.5) * dr.x;
                 p_vectors->r[ipart].y = (j + 0.5) * dr.y;
                 p_vectors->r[ipart].z = (k + 0.5) * dr.z;
-                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+                // printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x, p_vectors->r[ipart].y, p_vectors->r[ipart].z, ipart);
             }
             for (size_t k = 0; k < n.k; ++k, ++ipart)
             {
@@ -218,7 +218,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
                 p_vectors->r[ipart].x = (i + 0.5) * dr.x;
                 p_vectors->r[ipart].y = (j + 0.5 + 1) * dr.y;
                 p_vectors->r[ipart].z = (n.k - k + 0.5) * dr.z;
-                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+                // printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x, p_vectors->r[ipart].y, p_vectors->r[ipart].z, ipart);
             }
         }
         for (size_t j = 0; j < n.j; j = j + 2)
@@ -230,7 +230,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
                 p_vectors->r[ipart].x = (i + 0.5 + 1) * dr.x;
                 p_vectors->r[ipart].y = (n.j - j + 0.5) * dr.y;
                 p_vectors->r[ipart].z = (k + 0.5) * dr.z;
-                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+                // printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x, p_vectors->r[ipart].y, p_vectors->r[ipart].z, ipart);
             }
             for (size_t k = 0; k < n.k; ++k, ++ipart)
             {
@@ -239,7 +239,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
                 p_vectors->r[ipart].x = (i + 0.5 + 1) * dr.x;
                 p_vectors->r[ipart].y = (n.j - j + 0.5 - 1) * dr.y;
                 p_vectors->r[ipart].z = (n.k - k + 0.5) * dr.z;
-                //printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x,p_vectors->r[ipart].y,p_vectors->r[ipart].z,ipart);
+                // printf("x: %lf y: %lf z: %lf  n: %d \n", p_vectors->r[ipart].x, p_vectors->r[ipart].y, p_vectors->r[ipart].z, ipart);
             }
         }
     }
@@ -256,6 +256,10 @@ void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_ve
 
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
+        p_vectors->f[i].x = 0.0;
+        p_vectors->f[i].y = 0.0;
+        p_vectors->f[i].z = 0.0;
+
         p_vectors->v[i].x = sqrtktm * gauss();
         p_vectors->v[i].y = sqrtktm * gauss();
         p_vectors->v[i].z = sqrtktm * gauss();

@@ -17,11 +17,11 @@
  *
  * -Implement a Berendsen thermostat in dynamics.c
  * -Implement bonds in initialise_bonds in file initialise.c
- * -Initialize vectors.type such that particles get the proper type 
+ * -Initialize vectors.type such that particles get the proper type
  * -Implement the bonded and non-bonded force in force.c. (Make the forces type dependent)
  * -Change the particle position initialisation such that it takes into account bond lengths and angles
  * -Implement the needed on-the-fly data analysis
- * 
+ *
  */
 
 #include <stdio.h>
@@ -52,7 +52,7 @@ int main(void)
     double Ekin, Epot, time;
 
     FILE *MD = NULL;
-	MD= fopen("exp.txt","w");
+    MD = fopen("exp.txt", "w");
     fprintf(MD, "Step,\tt,\t\tEkin,\t\tEpot,\t\tEtot,\n");
     set_parameters(&parameters);
     alloc_memory(&parameters, &vectors, &nbrlist);
@@ -74,16 +74,18 @@ int main(void)
         step++;
         time += parameters.dt;
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
-        //thermostat(&parameters, &vectors, Ekin);
+        // thermostat(&parameters, &vectors, Ekin);
         update_positions(&parameters, &nbrlist, &vectors);
         boundary_conditions(&parameters, &vectors);
         update_nbrlist(&parameters, &vectors, &nbrlist);
         Epot = calculate_forces(&parameters, &nbrlist, &vectors);
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
-        fprintf(MD,"%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
+        fprintf(MD, "%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
         printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
-        if (step % parameters.num_dt_pdb == 0) record_trajectories_pdb(0, &parameters, &vectors, time);
-        if (step % parameters.num_dt_restart == 0) save_restart(&parameters,&vectors); 
+        if (step % parameters.num_dt_pdb == 0)
+            record_trajectories_pdb(0, &parameters, &vectors, time);
+        if (step % parameters.num_dt_restart == 0)
+            save_restart(&parameters, &vectors);
     }
     save_restart(&parameters, &vectors);
     free_memory(&vectors, &nbrlist);
