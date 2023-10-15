@@ -16,13 +16,13 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->a = 25.0;
   p_parameters->gamma = 4.5;
   // The parameters below control core functionalities of the code, but many values will need to be changed
-  p_parameters->num_part = 500;                              // number of particles
-  p_parameters->N = 10;                                      // Number of molecules in a particle
-  p_parameters->num_dt_steps = 20000;                        // number of time steps
+  p_parameters->num_part = 1300;                             // number of particles
+  p_parameters->N = 1;                                       // Number of molecules in a particle
+  p_parameters->num_dt_steps = 2000;                         // number of time steps
   p_parameters->exclude_12_nb = 0;                           // 1-2 connected atoms exluded from non-bonded interactions
   p_parameters->exclude_13_nb = 0;                           // 1-3 connected atoms exluded from non-bonded interactions
-  p_parameters->dt = 0.001;                                  // integration time step
-  p_parameters->L = (struct Vec3D){30.0, 30.0, 30.0};        // box size
+  p_parameters->dt = 0.01;                                   // integration time step
+  p_parameters->L = (struct Vec3D){7.0, 7.0, 7.0};           // box size
   p_parameters->r_cut = 1;                                   // cut-off distance used for neigbor list
   p_parameters->r_shell = 0.4;                               // shell thickness for neighbor list
   p_parameters->num_dt_pdb = 100;                            // number of time steps in between pdb outputs

@@ -194,9 +194,9 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     n.i = (int)ceil(p_parameters->L.x / dl);
     n.j = (int)ceil(p_parameters->L.y / dl);
     n.k = (int)ceil(p_parameters->L.z / dl);
-    dr.x = 0.8 * p_parameters->L.x / (double)n.i;
-    dr.y = 0.8 * p_parameters->L.y / (double)n.j;
-    dr.z = 0.8 * p_parameters->L.z / (double)n.k;
+    dr.x = 0.9 * p_parameters->L.x / (double)n.i;
+    dr.y = 0.9 * p_parameters->L.y / (double)n.j;
+    dr.z = 0.9 * p_parameters->L.z / (double)n.k;
     ipart = 0;
     for (size_t i = 0; i < n.i; i = i + 2)
     {

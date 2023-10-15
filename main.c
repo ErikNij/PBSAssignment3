@@ -52,6 +52,9 @@ int main(void)
     double Ekin, Epot, time;
 
     FILE *MD = NULL;
+    FILE *fpt;
+    fpt = fopen("Energy.csv", "w+");
+
     MD = fopen("exp.txt", "w");
     fprintf(MD, "Step,\tt,\t\tEkin,\t\tEpot,\t\tEtot,\n");
     set_parameters(&parameters);
@@ -82,11 +85,13 @@ int main(void)
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
         fprintf(MD, "%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
         printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
+        fprintf(fpt, "%zu, %f, %f, %f, %f\n", step, time, Epot, Ekin, Epot + Ekin);
         if (step % parameters.num_dt_pdb == 0)
             record_trajectories_pdb(0, &parameters, &vectors, time);
         if (step % parameters.num_dt_restart == 0)
             save_restart(&parameters, &vectors);
     }
+    fclose(fpt);
     save_restart(&parameters, &vectors);
     free_memory(&vectors, &nbrlist);
 

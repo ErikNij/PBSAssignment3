@@ -170,7 +170,7 @@ This function returns the total potential energy of the system. */
             f[j].z -= df.z;
 
             // Now for the disapative force
-
+            /*
             double dotProduct = (rij.x * vij.x) + (rij.y * vij.y) + (rij.z * vij.z);
 
             fr = -p_parameters->gamma * pow(1 - dist, 2) * dotProduct / dist / dist;
@@ -199,6 +199,7 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
+            */
         }
     }
 
