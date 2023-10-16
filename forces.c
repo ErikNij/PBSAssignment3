@@ -136,7 +136,6 @@ This function returns the total potential energy of the system. */
     const size_t num_nbrs = p_nbrlist->num_nbrs;
     struct Vec3D *f = p_vectors->f;
     size_t num_part = p_parameters->num_part;
-    a = p_parameters->a;
     r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
     double epsilon = p_parameters->epsilon;
     sigma = p_parameters->sigma;
@@ -155,6 +154,14 @@ This function returns the total potential energy of the system. */
         {
             Epot_cutoff = p_parameters->r_cut - 0.5 * r_cutsq;
             dist = sqrt(rij.sq);
+            if (p_vectors->type[i] == p_vectors->type[j])
+            {
+                a = p_parameters->a_same;
+            }
+            else
+            {
+                a = p_parameters->a_ab;
+            }
             fr = a * (1 - dist) / dist;
             df.x = fr * rij.x;
             df.y = fr * rij.y;

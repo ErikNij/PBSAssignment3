@@ -5,7 +5,7 @@
 
 /**
  * @brief Struct to store x, y, and z component of a 3D vector.
- * 
+ *
  */
 struct Vec3D
 {
@@ -14,49 +14,53 @@ struct Vec3D
 
 /**
  * @brief Struct to store all parameters. These parameters are set by the function @ref set_parameters.
- * 
+ *
  */
 struct Parameters
 {
-    int N;                   //!< Number of particles in a bonded set
-    size_t num_part;         //!< Number of particles
-    size_t num_dt_steps;     //!< Number of time steps
-    double dt;               //!< integration time step
-    struct Vec3D L;          //!< Box sizes in 3 direction
-    int exclude_12_nb;       //!< If true (=1) 1-2 connected atoms are exluded from non-bonded interactions 
-    int exclude_13_nb;       //!< If true (-1) 1-3 connected atoms are exluded from non-bonded interactions    
-    double kT;               //!< Thermal energy
-    double mass;             //!< Mass of a particle
-    double epsilon;          //!< LJ interaction strength
-    double sigma;            //!< LJ particle diameter
-    double r_cut;            //!< Cut-off distance for LJ interaction
-    double r_shell;          //!< Shell thickness for neighbor list
-    double a;
+    int Na;                   //!< Number of a particles in a bonded set
+    int Nb;                   //!< Number of b particles in a bonded set
+    double moleFrac;          //!< Mole fraction of part a vs part b (1 = all type a)
+    double resolutionDensity; // How much more smaller should the boxs be for the density?
+    size_t num_part;          //!< Number of particles
+    size_t num_dt_steps;      //!< Number of time steps
+    double dt;                //!< integration time step
+    struct Vec3D L;           //!< Box sizes in 3 direction
+    int exclude_12_nb;        //!< If true (=1) 1-2 connected atoms are exluded from non-bonded interactions
+    int exclude_13_nb;        //!< If true (-1) 1-3 connected atoms are exluded from non-bonded interactions
+    double kT;                //!< Thermal energy
+    double mass;              //!< Mass of a particle
+    double epsilon;           //!< LJ interaction strength
+    double sigma;             //!< LJ particle diameter
+    double r_cut;             //!< Cut-off distance for LJ interaction
+    double r_shell;           //!< Shell thickness for neighbor list
+    double a_same;
+    double a_ab;
     double gamma;
-    size_t num_dt_pdb;       //!< Number of time steps between pdb saves
-    double rescale_output;   //!< Rescale factor for outputted positions
-    char filename_pdb[1024]; //!< filename (without extension) for pdb file
-    char filename_xyz[1024]; //!< filename (without extension) for pdb file
-    char load_restart;       //!< if equal 1 restart file is loaded
-    size_t num_dt_restart;   //!< Number of time steps between saves of restart file
+    size_t num_dt_pdb;               //!< Number of time steps between pdb saves
+    double rescale_output;           //!< Rescale factor for outputted positions
+    char filename_pdb[1024];         //!< filename (without extension) for pdb file
+    char filename_xyz[1024];         //!< filename (without extension) for pdb file
+    char load_restart;               //!< if equal 1 restart file is loaded
+    size_t num_dt_restart;           //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file
     char restart_out_filename[1024]; //!< filename for saved restart file
 };
 
 /**
  * @brief Struct to store a 3D vector and its square length. This is expecially useful for connecting vectors in e.g. neighbor lists.
- * 
+ *
  */
 struct DeltaR
 /* Structure to store a 3D vector and its square length. */
 {
-    double x, y, z; //!< x, y and z coordinates 
-    double sq;      //!< square length 
+    double x, y, z; //!< x, y and z coordinates
+    double sq;      //!< square length
 };
 
 /**
  * @brief Struct to store i, j, k indices of a 3D grid
- * 
+ *
  */
 struct Index3D
 {
@@ -65,53 +69,53 @@ struct Index3D
 
 /**
  * @brief Struct to store indices of bonded particles i-j
- * 
+ *
  */
 struct Bond
 {
-    size_t i,j;
+    size_t i, j;
 };
 
 /**
  * @brief Struct to store indices of particles in an angle i-j-k
- * 
+ *
  */
 struct Angle
 {
-    size_t i,j,k;
+    size_t i, j, k;
 };
 
 /**
  * @brief Struct to store indices of particles in a dihedral i-j-k-l
- * 
+ *
  */
 struct Dihedral
 {
-    size_t i,j,k,l;
+    size_t i, j, k, l;
 };
 
 /**
  * @brief Struct to store a pair of particles: its indices and connecting vector
- * 
+ *
  */
 struct Pair
 {
-    size_t i, j; //!< indices of the two particles forming a pair
+    size_t i, j;       //!< indices of the two particles forming a pair
     struct DeltaR rij; //!< The connecting vector between the pairs rij = r[i]-r[j] corrected for periodicity
-    struct DeltaR vij; //The Velocity difference between the particles. 
+    struct DeltaR vij; // The Velocity difference between the particles.
 };
 
 /**
  * @brief Struct with pointers to all particle arrays relevant for a MD simulation
- * 
+ *
  */
 struct Vectors
 {
     size_t size;                //!< size of particle arrays (can be > num_part)
     size_t num_bonds;           //!< number of bonds
-    size_t num_angles;          //!< number of angles 
+    size_t num_angles;          //!< number of angles
     size_t num_dihedrals;       //!< number of dihedrals
-    int    *type;               //!< type
+    int *type;                  //!< type
     struct Vec3D *r;            //!< positions
     struct Vec3D *dr;           //!< displacements
     struct Vec3D *v;            //!< velocities
@@ -123,20 +127,20 @@ struct Vectors
 
 /**
  * @brief Struct used to store a cell-linked-list
- * 
+ *
  */
 struct Celllist
 {
-    size_t *head; //!< head[icell] provides the head the list for cell icell 
-    size_t *list; //!< list[i] provides the next particle index in the cell-linked-list. list[i]==SIZE_MAX encodes the end of the list.
-    size_t *particle2cell; //!< provides the cell index for a particle
+    size_t *head;                                  //!< head[icell] provides the head the list for cell icell
+    size_t *list;                                  //!< list[i] provides the next particle index in the cell-linked-list. list[i]==SIZE_MAX encodes the end of the list.
+    size_t *particle2cell;                         //!< provides the cell index for a particle
     size_t num_cells, num_cells_max, num_part_max; //!< number of cells used and number of cells and particles allocated for
-    struct Index3D size_grid; //!< number of cells in each direction
+    struct Index3D size_grid;                      //!< number of cells in each direction
 };
 
 /**
  * @brief Struct to store a neighbor list
- * 
+ *
  */
 struct Nbrlist
 {
@@ -144,9 +148,9 @@ struct Nbrlist
     size_t num_nbrs, num_nbrs_max; //!< number of neighbors and maximum number allocated
     struct Pair *nbr;              //!< list of non-bounded neighbor pairs
     struct DeltaR *dr;             //!< displacements particles with respect to nbrlist creation time
-    size_t *head12, *pairs12;          //!< list of 12 bonded pairs
-    size_t *head13, *pairs13;          //!< list of 13 bonded pairs
-    size_t *head14, *pairs14;          //!< list of 14 bonded pairs
+    size_t *head12, *pairs12;      //!< list of 12 bonded pairs
+    size_t *head13, *pairs13;      //!< list of 13 bonded pairs
+    size_t *head14, *pairs14;      //!< list of 14 bonded pairs
 };
 
 #endif /* TYPES_MD_H_ */

@@ -53,7 +53,14 @@ int main(void)
 
     FILE *MD = NULL;
     FILE *fpt;
+    FILE *fp_density[6];
     fpt = fopen("Energy.csv", "w+");
+    fp_density[0] = fopen("Densityax.csv", "w+");
+    fp_density[1] = fopen("Densityay.csv", "w+");
+    fp_density[2] = fopen("Densityaz.csv", "w+");
+    fp_density[3] = fopen("Densitybx.csv", "w+");
+    fp_density[4] = fopen("Densityby.csv", "w+");
+    fp_density[5] = fopen("Densitybz.csv", "w+");
 
     MD = fopen("exp.txt", "w");
     fprintf(MD, "Step,\tt,\t\tEkin,\t\tEpot,\t\tEtot,\n");
@@ -88,10 +95,15 @@ int main(void)
         fprintf(fpt, "%zu, %f, %f, %f, %f\n", step, time, Epot, Ekin, Epot + Ekin);
         if (step % parameters.num_dt_pdb == 0)
             record_trajectories_pdb(0, &parameters, &vectors, time);
+        density_profile(&parameters, &vectors, time, fp_density);
         if (step % parameters.num_dt_restart == 0)
             save_restart(&parameters, &vectors);
     }
     fclose(fpt);
+    for (int i = 0; i < 6; i++)
+    {
+        fclose(fp_density[i]);
+    }
     save_restart(&parameters, &vectors);
     free_memory(&vectors, &nbrlist);
 

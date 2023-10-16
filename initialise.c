@@ -9,23 +9,43 @@
 void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
     for (size_t i = 0; i < p_parameters->num_part; i++)
-        p_vectors->type[i] = 0; // Specify particle type
+        if (i < p_parameters->num_part * p_parameters->moleFrac)
+        {
+            p_vectors->type[i] = 0; // Specify particle type a
+        }
+        else
+        {
+            p_vectors->type[i] = 1; // Specify particle type b
+        }
 }
 
 void initialise_bond_connectivity(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    size_t num_bonds = p_parameters->num_part - (p_parameters->num_part / p_parameters->N);
+    size_t num_bonds = p_parameters->num_part - (p_parameters->num_part / fmax(p_parameters->Na, p_parameters->Nb));
     struct Bond *bonds = (struct Bond *)malloc(num_bonds * sizeof(struct Bond));
     size_t k = 0; // This will index the bonds
 
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
-        if (i % p_parameters->N != 0)
+        if (i < p_parameters->num_part * p_parameters->moleFrac)
         {
-            bonds[k].i = i;
-            bonds[k].j = i - 1;
-            // printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
-            k++;
+            if (i % p_parameters->Na != 0)
+            {
+                bonds[k].i = i;
+                bonds[k].j = i - 1;
+                // printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
+                k++;
+            }
+        }
+        else
+        {
+            if (i % p_parameters->Nb != 0)
+            {
+                bonds[k].i = i;
+                bonds[k].j = i - 1;
+                // printf("bond %d is between %d and %d \n",k,bonds[k].i,bonds[k].j);
+                k++;
+            }
         }
     }
     num_bonds = k;

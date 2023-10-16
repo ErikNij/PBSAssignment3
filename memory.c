@@ -47,7 +47,7 @@ void free_vectors(struct Vectors *p_vectors)
 
 void alloc_memory(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist)
 /* Allocate all variables needed in the MD simulation */
-{    
+{
     alloc_vectors(p_vectors, p_parameters->num_part);
     alloc_nbrlist(p_parameters, p_nbrlist);
 }

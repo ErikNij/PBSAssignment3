@@ -8,7 +8,7 @@
  * @param p_vectors used members: r
  * @param time time stamp
  */
-void record_trajectories_pdb(int reset, struct Parameters * p_parameters, struct Vectors * p_vectors, double time);
+void record_trajectories_pdb(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time);
 
 /**
  * @brief Output particle positions to xyz file
@@ -17,22 +17,24 @@ void record_trajectories_pdb(int reset, struct Parameters * p_parameters, struct
  * @param p_vectors used members: r
  * @param time time stamp
  */
-void record_trajectories_xyz(int reset, struct Parameters * p_parameters, struct Vectors * p_vectors, double time);
+void record_trajectories_xyz(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time);
 
 /**
  * @brief Save a restart file
- * 
- * @param p_parameters 
- * @param p_vectors 
+ *
+ * @param p_parameters
+ * @param p_vectors
  */
 void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
 /**
  * @brief Load a restart file
- * 
- * @param p_parameters 
- * @param p_vectors 
+ *
+ * @param p_parameters
+ * @param p_vectors
  */
 void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
+
+void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors, double time, FILE **fp);
 
 #endif /* FILEOUTPUT_H_ */
