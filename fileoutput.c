@@ -143,17 +143,17 @@ void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors,
     }
   }
 
-  for (int i = 0; i < ceil(p_parameters->L.x); i++)
+  for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
   {
     fprintf(fp[0], "%f,", ax[i]);
     fprintf(fp[3], "%f,", bx[i]);
   }
-  for (int i = 0; i < ceil(p_parameters->L.y); i++)
+  for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
   {
     fprintf(fp[1], "%f,", ay[i]);
     fprintf(fp[4], "%f,", by[i]);
   }
-  for (int i = 0; i < ceil(p_parameters->L.z); i++)
+  for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
   {
     fprintf(fp[2], "%f,", az[i]);
     fprintf(fp[5], "%f,", bz[i]);

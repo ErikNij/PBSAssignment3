@@ -14,7 +14,7 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->epsilon = 1.0; // LJ interaction strength
   p_parameters->sigma = 3.0;   // LJ particle diameter
   p_parameters->a_same = 25.0; // repulsion parameter for the same type of particle
-  p_parameters->a_ab = 37;     // repulsion parameter for the different type of particle
+  p_parameters->a_ab = 50.0;   // repulsion parameter for the different type of particle
   p_parameters->gamma = 4.5;
 
   // The parameters below control core functionalities of the code, but many values will need to be changed
@@ -26,7 +26,7 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->exclude_12_nb = 0;                           // 1-2 connected atoms exluded from non-bonded interactions
   p_parameters->exclude_13_nb = 0;                           // 1-3 connected atoms exluded from non-bonded interactions
   p_parameters->dt = 0.01;                                   // integration time step
-  p_parameters->L = (struct Vec3D){7.0, 7.0, 7.0};           // box size
+  p_parameters->L = (struct Vec3D){10.0, 10.0, 10.0};        // box size
   p_parameters->r_cut = 1;                                   // cut-off distance used for neigbor list
   p_parameters->r_shell = 0.4;                               // shell thickness for neighbor list
   p_parameters->num_dt_pdb = 10;                             // number of time steps in between pdb outputs
