@@ -26,6 +26,9 @@ double update_velocities_half_dt(struct Parameters *p_parameters, struct Nbrlist
  */
 void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
+void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors);
+
+
 /**
  * @brief Apply thermostat by manipolating particle velocities
  * @param[in] p_parameters parameters for the thermostat

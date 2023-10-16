@@ -35,4 +35,7 @@ void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
  */
 void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
+
+void record_radial(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time);
+
 #endif /* FILEOUTPUT_H_ */

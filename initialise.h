@@ -31,6 +31,7 @@ void initialise_structure(struct Parameters *p_parameters, struct Vectors *p_vec
  */
 void initialise(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, size_t *p_step, double *p_time);
 
+
 /**
  * @brief Initialises positions on a cubic lattice
  * 
@@ -46,5 +47,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
  * @param p_vectors used members: r
  */
 void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_vectors);
+
+
 
 #endif /* INITIALISE_H_ */

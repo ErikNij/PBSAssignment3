@@ -59,7 +59,38 @@ void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vect
     }
 }
 
-void thermostat(struct Parameters *p_parameters, struct Vectors *p_vectors, double Ekin)
-/* Change velocities by thermostatting */
+void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
+    double xdist, ydist, zdist;
+    struct Vec3D rij;
+    double disttot;
+    size_t nbin;
+    for(size_t i=0; i<p_parameters->num_part; i++)
+    {
+        for(size_t j=0; j<p_parameters->num_part; j++)
+        {
+            rij.x = p_vectors->r[i].x-p_vectors->r[j].x;
+            rij.y = p_vectors->r[i].y-p_vectors->r[j].y;
+            rij.z = p_vectors->r[i].z-p_vectors->r[j].z;
+
+            rij.x = rij.x - p_parameters->L.x *floor((rij.x/p_parameters->L.x) +0.5);
+            rij.y = rij.y - p_parameters->L.y *floor((rij.y/p_parameters->L.y) +0.5);
+            rij.z = rij.z - p_parameters->L.z *floor((rij.z/p_parameters->L.z) +0.5);
+
+
+            xdist = (p_vectors->r[i].x-p_vectors->r[j].x)*(p_vectors->r[i].x-p_vectors->r[j].x);
+            ydist = (p_vectors->r[i].y-p_vectors->r[j].y)*(p_vectors->r[i].y-p_vectors->r[j].y);
+            zdist = (p_vectors->r[i].z-p_vectors->r[j].z)*(p_vectors->r[i].z-p_vectors->r[j].z);
+
+            disttot = sqrt(xdist+ydist+zdist);
+            nbin = floor(disttot);
+
+            if(nbin>0 && nbin<100) 
+            {
+                p_parameters->rdf[nbin] +=1;
+            }
+        }
+    }
+
 }
+

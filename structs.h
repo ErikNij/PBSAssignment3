@@ -30,12 +30,14 @@ struct Parameters
     double sigma;            //!< LJ particle diameter
     double r_cut;            //!< Cut-off distance for LJ interaction
     double r_shell;          //!< Shell thickness for neighbor list
+    double rdf[3000];        //!< Radial distribution value calculation parameter
     double a;
     double gamma;
     size_t num_dt_pdb;       //!< Number of time steps between pdb saves
     double rescale_output;   //!< Rescale factor for outputted positions
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
     char filename_xyz[1024]; //!< filename (without extension) for pdb file
+    char filename_radial[1024];
     char load_restart;       //!< if equal 1 restart file is loaded
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file
@@ -110,6 +112,7 @@ struct Vectors
     size_t num_bonds;           //!< number of bonds
     size_t num_angles;          //!< number of angles 
     size_t num_dihedrals;       //!< number of dihedrals
+    size_t radsum;              //!< radialdistribution value
     int    *type;               //!< type
     struct Vec3D *r;            //!< positions
     struct Vec3D *dr;           //!< displacements
@@ -118,6 +121,7 @@ struct Vectors
     struct Bond *bonds;         //!< bonds
     struct Angle *angles;       //!< angles
     struct Dihedral *dihedrals; //!< dihedrals
+                                    
 };
 
 /**

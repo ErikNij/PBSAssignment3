@@ -46,7 +46,7 @@ void record_trajectories_xyz(int reset, struct Parameters *p_parameters, struct 
   char filename[1024];
   double rs = p_parameters->rescale_output;
 
-  snprintf(filename, 1024, "%s%s", p_parameters->filename_xyz, ".xyz");
+  snprintf(filename, 1024, "%s%s", p_parameters->filename_xyz, ".dat");
   if (reset == 1)
   {
     fp_traj = fopen(filename, "w");
@@ -66,6 +66,47 @@ void record_trajectories_xyz(int reset, struct Parameters *p_parameters, struct 
 
   fclose(fp_traj);
 }
+
+void record_radial(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time)
+{
+  FILE *fprad;
+  char filename[1024];
+
+  snprintf(filename, 1024, "%s%s", p_parameters->filename_radial, ".dat");
+  if (reset == 1)
+  {
+    fprad = fopen(filename, "w");
+  }
+  else
+  {
+    fprad = fopen(filename, "a");
+  }
+
+double Volume = p_parameters->L.x * p_parameters->L.y * p_parameters->L.z;
+double frac = 1.333; // 4/3 in numbers
+double Dens = p_parameters->num_part/Volume;
+
+
+for(size_t numbin=0; numbin<100; numbin++)
+{
+  double numbin1 = numbin+1;
+  double rad = (numbin1*numbin1*numbin1)-(numbin*numbin*numbin);
+  p_parameters->rdf[numbin] = p_parameters->rdf[numbin]/(Dens * frac * PI * rad);
+}
+
+
+  fprintf(fprad, "MODEL\n");
+  fprintf(fprad, "REMARK TIME = %f\n", time);
+  fprintf(fprad, "CRYST1%9.3f\n", p_parameters->rdf, "P 1", "1");
+  for (size_t i = 0; i < 100; i++)
+  {
+    fprintf(fprad, "HETATM %5u  C 1 UNK     1    %7.4f\n", (unsigned int)i % 100000, p_parameters->rdf[i]);
+  }
+  fprintf(fprad, "ENDMDL\n");
+
+  fclose(fprad);
+}
+
 
 void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
 /* save arrays in vectors to binary file */
@@ -95,3 +136,5 @@ void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
   fread(p_vectors->f, sz, 1, p_file);
   fclose(p_file);
 }
+
+
