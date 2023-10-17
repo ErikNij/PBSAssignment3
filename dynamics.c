@@ -59,7 +59,13 @@ void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vect
     }
 }
 
-void thermostat(struct Parameters *p_parameters, struct Vectors *p_vectors, double Ekin)
-/* Change velocities by thermostatting */
-{
-}
+ void transient_velocities(struct Parameters *p_parameters, struct Nbrlist *
+p_nbrlist, struct Vectors *p_vectors, FILE *sp)
+ {
+ const double factor = 0.5 / p_parameters->mass * p_parameters->dt;
+ for (size_t i = 0; i < p_parameters->num_part; i++)
+ {
+ fprintf(sp,"%f, " , p_vectors->v[i].x);
+ }
+
+ }

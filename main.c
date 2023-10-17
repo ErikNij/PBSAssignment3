@@ -63,6 +63,14 @@ int main(void)
     fp_density[4] = fopen("Densityby.csv", "w+");
     fp_density[5] = fopen("Densitybz.csv", "w+");
 
+        FILE *sp6 = NULL;
+    sp6 = fopen("Velocities.txt","w");
+    if (sp6 == NULL)
+    {   
+        printf("File could not open correctly\n");
+        exit(1);
+    }
+
     MD = fopen("exp.txt", "w");
     fprintf(MD, "Step,\tt,\t\tEkin,\t\tEpot,\t\tEtot,\n");
     set_parameters(&parameters);
@@ -128,7 +136,10 @@ int main(void)
         {
             density_profile(&parameters, &vectors, step, fp_density,abxyz);
         }
-
+        if(step >= (parameters.num_dt_steps-1000))
+            {
+                transient_velocities(&parameters, &nbrlist, &vectors, sp6);
+            }
     }
     fclose(fpt);
     for (int i = 0; i < 6; i++)

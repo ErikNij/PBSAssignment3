@@ -32,6 +32,7 @@ void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vect
  * @param[in, out] p_vectors used members: v
  * @param[in] Ekin current kinetic energy
  */
-void thermostat(struct Parameters *p_parameters, struct Vectors *p_vectors, double Ekin);
+ void transient_velocities(struct Parameters *p_parameters, struct Nbrlist *
+p_nbrlist, struct Vectors *p_vectors, FILE *sp);
 
 #endif /* DYNAMICS_H_ */
