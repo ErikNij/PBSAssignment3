@@ -35,6 +35,6 @@ void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
  */
 void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
-void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors, double time, FILE **fp);
+void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors, int step, FILE **fp,double **abcxyz);
 
 #endif /* FILEOUTPUT_H_ */

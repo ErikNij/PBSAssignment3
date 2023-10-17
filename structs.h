@@ -36,6 +36,7 @@ struct Parameters
     double r_shell;           //!< Shell thickness for neighbor list
     double a_same;
     double a_ab;
+    int DenAvgSteps;
     double gamma;
     size_t num_dt_pdb;               //!< Number of time steps between pdb saves
     double rescale_output;           //!< Rescale factor for outputted positions

@@ -54,6 +54,7 @@ int main(void)
     FILE *MD = NULL;
     FILE *fpt;
     FILE *fp_density[6];
+    double *abxyz[6];
     fpt = fopen("Energy.csv", "w+");
     fp_density[0] = fopen("Densityax.csv", "w+");
     fp_density[1] = fopen("Densityay.csv", "w+");
@@ -95,14 +96,45 @@ int main(void)
         fprintf(fpt, "%zu, %f, %f, %f, %f\n", step, time, Epot, Ekin, Epot + Ekin);
         if (step % parameters.num_dt_pdb == 0)
             record_trajectories_pdb(0, &parameters, &vectors, time);
-        density_profile(&parameters, &vectors, time, fp_density);
         if (step % parameters.num_dt_restart == 0)
             save_restart(&parameters, &vectors);
+        if (step == parameters.num_dt_steps-parameters.DenAvgSteps)
+        {
+            abxyz[0] = (double *)malloc(ceil(parameters.L.x * parameters.resolutionDensity) * sizeof(double));
+            abxyz[1] = (double *)malloc(ceil(parameters.L.y * parameters.resolutionDensity) * sizeof(double));
+            abxyz[2] = (double *)malloc(ceil(parameters.L.z * parameters.resolutionDensity) * sizeof(double));
+            abxyz[3] = (double *)malloc(ceil(parameters.L.x * parameters.resolutionDensity) * sizeof(double));
+            abxyz[4] = (double *)malloc(ceil(parameters.L.y * parameters.resolutionDensity) * sizeof(double));
+            abxyz[5] = (double *)malloc(ceil(parameters.L.z * parameters.resolutionDensity) * sizeof(double));
+
+            for (int i = 0; i < ceil(parameters.L.x * parameters.resolutionDensity); i++)
+            {
+              abxyz[0][i] = 0;
+              abxyz[3][i] = 0;
+            }
+            for (int i = 0; i < ceil(parameters.L.y * parameters.resolutionDensity); i++)
+            {
+              abxyz[1][i] = 0;
+              abxyz[4][i] = 0;
+            }
+            for (int i = 0; i < ceil(parameters.L.z * parameters.resolutionDensity); i++)
+            {
+              abxyz[2][i] = 0;
+              abxyz[5][i] = 0;
+            }
+
+        }
+        if (step > parameters.num_dt_steps-parameters.DenAvgSteps)
+        {
+            density_profile(&parameters, &vectors, step, fp_density,abxyz);
+        }
+
     }
     fclose(fpt);
     for (int i = 0; i < 6; i++)
     {
         fclose(fp_density[i]);
+        free(abxyz[i]);
     }
     save_restart(&parameters, &vectors);
     free_memory(&vectors, &nbrlist);

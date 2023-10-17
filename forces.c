@@ -15,8 +15,8 @@ double calculate_forces(struct Parameters *p_parameters, struct Nbrlist *p_nbrli
         // initialize the forces to zero
         f[i] = (struct Vec3D){0.0, 0.0, 0.0}; /*initialize forces to zero*/
 
-    double Epot = calculate_forces_bond(p_parameters, p_vectors);
-    Epot += calculate_forces_angle(p_parameters, p_vectors);
+    //double Epot = calculate_forces_bond(p_parameters, p_vectors);
+    double Epot = calculate_forces_angle(p_parameters, p_vectors);
     Epot += calculate_forces_dihedral(p_parameters, p_vectors);
     Epot += calculate_forces_nb(p_parameters, p_nbrlist, p_vectors);
     return Epot;
@@ -154,6 +154,8 @@ This function returns the total potential energy of the system. */
         {
             Epot_cutoff = p_parameters->r_cut - 0.5 * r_cutsq;
             dist = sqrt(rij.sq);
+            int t1 = p_vectors->type[i];
+            int t2 = p_vectors->type[j];
             if (p_vectors->type[i] == p_vectors->type[j])
             {
                 a = p_parameters->a_same;
@@ -177,7 +179,7 @@ This function returns the total potential energy of the system. */
             f[j].z -= df.z;
 
             // Now for the disapative force
-            /*
+            
             double dotProduct = (rij.x * vij.x) + (rij.y * vij.y) + (rij.z * vij.z);
 
             fr = -p_parameters->gamma * pow(1 - dist, 2) * dotProduct / dist / dist;
@@ -194,6 +196,7 @@ This function returns the total potential energy of the system. */
             f[j].z -= df.z;
 
             // For the random force
+            
             dzeta = generate_uniform_random();
             fr = sigma * (1 - dist) * dzeta * (1 / sqrt(dt)) / dist;
             df.x = fr * rij.x;
@@ -206,7 +209,6 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
-            */
         }
     }
 

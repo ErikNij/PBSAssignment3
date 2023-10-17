@@ -28,9 +28,19 @@ void record_trajectories_pdb(int reset, struct Parameters *p_parameters, struct 
   fprintf(fp_traj, "MODEL\n");
   fprintf(fp_traj, "REMARK TIME = %f\n", time);
   fprintf(fp_traj, "CRYST1%9.3f%9.3f%9.3f%7.2f%7.2f%7.2f %-10s%-3s\n", rs * p_parameters->L.x, rs * p_parameters->L.y, rs * p_parameters->L.z, 90.0, 90.0, 90.0, "P 1", "1");
+  char typeLetter;
   for (size_t i = 0; i < p_parameters->num_part; i++)
   {
-    fprintf(fp_traj, "HETATM %5u  C 1 UNK     1    %7.4f %7.4f %7.4f   1.0   1.0\n", (unsigned int)i % 100000, rs * p_vectors->r[i].x, rs * p_vectors->r[i].y, rs * p_vectors->r[i].z);
+    if (i < p_parameters->num_part * p_parameters->moleFrac)
+    {
+      typeLetter = 'C';
+    }
+    else
+    {
+      typeLetter = 'H';
+    }
+    //printf("%c",typeLetter);
+    fprintf(fp_traj, "HETATM %5u  %c 1 UNK     1    %7.4f %7.4f %7.4f   1.0   1.0\n", (unsigned int)i % 100000,typeLetter, rs * p_vectors->r[i].x, rs * p_vectors->r[i].y, rs * p_vectors->r[i].z);
   }
   fprintf(fp_traj, "ENDMDL\n");
 
@@ -97,32 +107,17 @@ void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
   fclose(p_file);
 }
 
-void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors, double time, FILE **fp)
+void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors, int step, FILE **fp, double **abcxyz)
 {
-  double *ax = (double *)malloc(ceil(p_parameters->L.x * p_parameters->resolutionDensity) * sizeof(double));
-  double *ay = (double *)malloc(ceil(p_parameters->L.y * p_parameters->resolutionDensity) * sizeof(double));
-  double *az = (double *)malloc(ceil(p_parameters->L.z * p_parameters->resolutionDensity) * sizeof(double));
-  double *bx = (double *)malloc(ceil(p_parameters->L.x * p_parameters->resolutionDensity) * sizeof(double));
-  double *by = (double *)malloc(ceil(p_parameters->L.y * p_parameters->resolutionDensity) * sizeof(double));
-  double *bz = (double *)malloc(ceil(p_parameters->L.z * p_parameters->resolutionDensity) * sizeof(double));
+  double *ax = abcxyz[0];
+  double *ay = abcxyz[1];
+  double *az = abcxyz[2];
+  double *bx = abcxyz[3];
+  double *by = abcxyz[4];
+  double *bz = abcxyz[5];
+
   int a = 0;
   int b = 0;
-
-  for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
-  {
-    ax[i] = 0;
-    bx[i] = 0;
-  }
-  for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
-  {
-    ay[i] = 0;
-    by[i] = 0;
-  }
-  for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
-  {
-    az[i] = 0;
-    bz[i] = 0;
-  }
 
   for (size_t i = 0; i < p_parameters->num_part; i++)
   {
@@ -142,31 +137,27 @@ void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors,
       b++;
     }
   }
-
-  for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
+  
+  if (step == p_parameters->num_dt_steps)
   {
-    fprintf(fp[0], "%f,", ax[i]);
-    fprintf(fp[3], "%f,", bx[i]);
+    for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
+    {
+      fprintf(fp[0], "%f,", ax[i]);
+      fprintf(fp[3], "%f,", bx[i]);
+    }
+    for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
+    {
+      fprintf(fp[1], "%f,", ay[i]);
+      fprintf(fp[4], "%f,", by[i]);
+    }
+    for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
+    {
+      fprintf(fp[2], "%f,", az[i]);
+      fprintf(fp[5], "%f,", bz[i]);
+    }
+    for (int i = 0; i < 6; i++)
+    {
+      fprintf(fp[i], "%d,%d \n", a, b);
+    }
   }
-  for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
-  {
-    fprintf(fp[1], "%f,", ay[i]);
-    fprintf(fp[4], "%f,", by[i]);
-  }
-  for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
-  {
-    fprintf(fp[2], "%f,", az[i]);
-    fprintf(fp[5], "%f,", bz[i]);
-  }
-  for (int i = 0; i < 6; i++)
-  {
-    fprintf(fp[i], "%d,%d \n", a, b);
-  }
-
-  free(ax);
-  free(ay);
-  free(az);
-  free(bx);
-  free(by);
-  free(bz);
 }
