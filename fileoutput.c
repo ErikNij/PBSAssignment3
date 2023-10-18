@@ -161,3 +161,4 @@ void density_profile(struct Parameters *p_parameters, struct Vectors *p_vectors,
     }
   }
 }
+

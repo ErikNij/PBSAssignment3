@@ -40,7 +40,7 @@ double calculate_forces_bond(struct Parameters *p_parameters, struct Vectors *p_
         rij.x = r[i].x - r[j].x;
         rij.x = rij.x - L.x * floor(rij.x / L.x + 0.5); // apply minimum image convenction for bonded particles
         rij.y = r[i].y - r[j].y;
-        rij.y = rij.y - L.y * floor(rij.y / L.y + 0.5);
+        rij.y = rij.y - L.y * floor(rij.y / L.y + 0.5); 
         rij.z = r[i].z - r[j].z;
         rij.z = rij.z - L.z * floor(rij.z / L.z + 0.5);
         fi.x = -2 * rij.x;
@@ -78,14 +78,14 @@ double calculate_forces_angle(struct Parameters *p_parameters, struct Vectors *p
         rij.x = r[i].x - r[j].x;
         rij.x = rij.x - L.x * floor(rij.x / L.x + 0.5); // apply minimum image convenction for bonded particles
         rij.y = r[i].y - r[j].y;
-        rij.y = rij.y - L.y * floor(rij.y / L.y + 0.5);
+        rij.y = rij.y - L.y * floor(rij.y / L.y + 0.5); 
         rij.z = r[i].z - r[j].z;
         rij.z = rij.z - L.z * floor(rij.z / L.z + 0.5);
 
         rkj.x = r[k].x - r[j].x;
         rkj.x = rkj.x - L.x * floor(rkj.x / L.x + 0.5); // apply minimum image convenction for bonded particles
         rkj.y = r[k].y - r[j].y;
-        rkj.y = rkj.y - L.y * floor(rkj.y / L.y + 0.5);
+        rkj.y = rkj.y - L.y * floor(rkj.y / L.y + 0.5); 
         rkj.z = r[k].z - r[j].z;
         rkj.z = rkj.z - L.z * floor(rkj.z / L.z + 0.5);
 
@@ -136,12 +136,12 @@ This function returns the total potential energy of the system. */
     const size_t num_nbrs = p_nbrlist->num_nbrs;
     struct Vec3D *f = p_vectors->f;
     size_t num_part = p_parameters->num_part;
-    r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
-    double epsilon = p_parameters->epsilon;
-    sigma = p_parameters->sigma;
+        r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
+        double epsilon = p_parameters->epsilon;
+sigma = p_parameters->sigma;
     dt = p_parameters->dt;
     double Epot = 0.0, Epot_cutoff;
-
+    
     for (size_t k = 0; k < num_nbrs; k++)
     {
         // for each pair in the neighbor list compute the pair forces
@@ -152,7 +152,7 @@ This function returns the total potential energy of the system. */
         if (rij.sq < r_cutsq)
         // Compute forces if the distance is smaller than the cutoff distance
         {
-            Epot_cutoff = p_parameters->r_cut - 0.5 * r_cutsq;
+Epot_cutoff = p_parameters->r_cut - 0.5 * r_cutsq;
             dist = sqrt(rij.sq);
             int t1 = p_vectors->type[i];
             int t2 = p_vectors->type[j];
@@ -168,7 +168,7 @@ This function returns the total potential energy of the system. */
             df.x = fr * rij.x;
             df.y = fr * rij.y;
             df.z = fr * rij.z;
-
+            
             Epot += -a * ((dist - p_parameters->r_cut) - 0.5 * (rij.sq - r_cutsq));
             // Epot+= 0.5*a*(dist-p_parameters->r_cut)*(dist-p_parameters->r_cut);
             f[i].x += df.x;
@@ -177,7 +177,7 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
-
+            
             // Now for the disapative force
             
             double dotProduct = (rij.x * vij.x) + (rij.y * vij.y) + (rij.z * vij.z);
@@ -194,9 +194,9 @@ This function returns the total potential energy of the system. */
             f[j].x -= df.x;
             f[j].y -= df.y;
             f[j].z -= df.z;
-
-            // For the random force
             
+            // For the random force
+
             dzeta = generate_uniform_random();
             fr = sigma * (1 - dist) * dzeta * (1 / sqrt(dt)) / dist;
             df.x = fr * rij.x;
