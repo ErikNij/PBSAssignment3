@@ -84,6 +84,7 @@ int main(void)
         
         Epot = calculate_forces(&parameters, &nbrlist, &vectors);
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors);
+<<<<<<< Updated upstream
         fprintf(MD,"%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
         printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
 <<<<<<< Updated upstream
@@ -100,6 +101,29 @@ int main(void)
             record_radial(0, &parameters, &vectors, time);
         if (step % parameters.num_dt_restart == 0)
             save_restart(&parameters, &vectors);
+>>>>>>> Stashed changes
+=======
+        
+        fprintf(MD, "%zu,\t%f,\t%f,\t%f,\t%f\n", step, time, Epot, Ekin, Epot + Ekin);
+        printf("Step %zu, Time %f, Epot %f, Ekin %f, Etot %f\n", step, time, Epot, Ekin, Epot + Ekin);
+        fprintf(fpt, "%zu, %f, %f, %f, %f\n", step, time, Epot, Ekin, Epot + Ekin);
+        if(step % parameters.num_dt_rad == 0 && step>15000)
+        {
+        Radialcalculation(&parameters,&vectors, &nbrlist);
+        
+        }
+        if (step % parameters.num_dt_pdb == 0)
+            record_trajectories_pdb(0, &parameters, &vectors, time);
+            
+        density_profile(&parameters, &vectors, time, fp_density);
+        if (step % parameters.num_dt_restart == 0)
+            save_restart(&parameters, &vectors);
+    }
+    record_radial(0,&parameters, &vectors, time);
+    fclose(fpt);
+    for (int i = 0; i < 6; i++)
+    {
+        fclose(fp_density[i]);
 >>>>>>> Stashed changes
     }
     save_restart(&parameters, &vectors);

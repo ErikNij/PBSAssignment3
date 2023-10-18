@@ -59,6 +59,7 @@ void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vect
     }
 }
 
+<<<<<<< Updated upstream
 void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
     double xdist, ydist, zdist;
@@ -68,6 +69,22 @@ void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vector
     for(size_t i=0; i<p_parameters->num_part; i++)
     {
         for(size_t j=0; j<p_parameters->num_part; j++)
+=======
+void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist)
+{
+
+    double xdist, ydist, zdist;
+    struct Vec3D rij;
+    double disttot;
+    float binmax = 1.0;
+    float binmin = 0.0;
+    float numbin = 100;
+    float dbin = (binmax-binmin)/numbin;
+    size_t nbin;
+    for(size_t i=0; i<p_parameters->num_part; i++)
+    {
+        for(size_t j=i+1; j<p_parameters->num_part; j++)
+>>>>>>> Stashed changes
         {
             rij.x = p_vectors->r[i].x-p_vectors->r[j].x;
             rij.y = p_vectors->r[i].y-p_vectors->r[j].y;
@@ -78,6 +95,7 @@ void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vector
             rij.z = rij.z - p_parameters->L.z *floor((rij.z/p_parameters->L.z) +0.5);
 
 
+<<<<<<< Updated upstream
             xdist = (p_vectors->r[i].x-p_vectors->r[j].x)*(p_vectors->r[i].x-p_vectors->r[j].x);
             ydist = (p_vectors->r[i].y-p_vectors->r[j].y)*(p_vectors->r[i].y-p_vectors->r[j].y);
             zdist = (p_vectors->r[i].z-p_vectors->r[j].z)*(p_vectors->r[i].z-p_vectors->r[j].z);
@@ -89,8 +107,33 @@ void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vector
             {
                 p_parameters->rdf[nbin] +=1;
             }
+=======
+            xdist = (rij.x*rij.x);
+            ydist = (rij.y*rij.y);
+            zdist = (rij.z*rij.z);
+
+            disttot = sqrt(xdist+ydist+zdist);
+            nbin = floor(disttot/dbin);
+
+            if(nbin>0 && nbin<numbin) 
+            {
+                p_parameters->rdf[nbin] +=1;
+            }
+            if(j=2999)
+            {}
+>>>>>>> Stashed changes
         }
     }
 
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+
+
+
+//void thermostat(struct Parameters *p_parameters, struct Vectors *p_vectors, double Ekin)
+/* Change velocities by thermostatting */
+>>>>>>> Stashed changes

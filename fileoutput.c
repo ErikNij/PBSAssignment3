@@ -138,3 +138,113 @@ void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
 }
 
 
+<<<<<<< Updated upstream
+=======
+  for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
+  {
+    ax[i] = 0;
+    bx[i] = 0;
+  }
+  for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
+  {
+    ay[i] = 0;
+    by[i] = 0;
+  }
+  for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
+  {
+    az[i] = 0;
+    bz[i] = 0;
+  }
+
+  for (size_t i = 0; i < p_parameters->num_part; i++)
+  {
+    double test = p_parameters->num_part * p_parameters->moleFrac;
+    if (i < p_parameters->num_part * p_parameters->moleFrac)
+    {
+      ax[(int)floor(p_vectors->r[i].x * p_parameters->resolutionDensity)]++;
+      ay[(int)floor(p_vectors->r[i].y * p_parameters->resolutionDensity)]++;
+      az[(int)floor(p_vectors->r[i].z * p_parameters->resolutionDensity)]++;
+      a++;
+    }
+    else
+    {
+      bx[(int)floor(p_vectors->r[i].x * p_parameters->resolutionDensity)]++;
+      by[(int)floor(p_vectors->r[i].y * p_parameters->resolutionDensity)]++;
+      bz[(int)floor(p_vectors->r[i].z * p_parameters->resolutionDensity)]++;
+      b++;
+    }
+  }
+
+  for (int i = 0; i < ceil(p_parameters->L.x * p_parameters->resolutionDensity); i++)
+  {
+    fprintf(fp[0], "%f,", ax[i]);
+    fprintf(fp[3], "%f,", bx[i]);
+  }
+  for (int i = 0; i < ceil(p_parameters->L.y * p_parameters->resolutionDensity); i++)
+  {
+    fprintf(fp[1], "%f,", ay[i]);
+    fprintf(fp[4], "%f,", by[i]);
+  }
+  for (int i = 0; i < ceil(p_parameters->L.z * p_parameters->resolutionDensity); i++)
+  {
+    fprintf(fp[2], "%f,", az[i]);
+    fprintf(fp[5], "%f,", bz[i]);
+  }
+  for (int i = 0; i < 6; i++)
+  {
+    fprintf(fp[i], "%d,%d \n", a, b);
+  }
+
+  free(ax);
+  free(ay);
+  free(az);
+  free(bx);
+  free(by);
+  free(bz);
+}
+
+void record_radial(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time)
+{
+  FILE *fprad;
+  char filename[1024];
+
+  snprintf(filename, 1024, "%s%s", p_parameters->filename_rad, ".dat");
+  if (reset == 1)
+  {
+    fprad = fopen(filename, "w");
+  }
+  else
+  {
+    fprad = fopen(filename, "a");
+  }
+
+double Volume = p_parameters->L.x * p_parameters->L.y * p_parameters->L.z;
+double frac = 1.333; // 4/3 in numbers
+double Dens = p_parameters->num_part/Volume;
+    float binmax = 1.0;
+    float binmin = 0.0;
+    float nbin = 100;
+    float dbin = (binmax-binmin)/nbin;
+
+for(size_t numbin=0; numbin<nbin; numbin++)
+{
+  double numbin1 = numbin+1;
+  double Vollarge = (pow((numbin+1)*dbin,3)*PI*frac*Dens);
+  double Volsmall = (pow((numbin)*dbin,3)*PI*frac*Dens);
+  double Volshell = Vollarge - Volsmall;
+  p_parameters->rdf[numbin] = p_parameters->rdf[numbin]/(Volshell);
+}
+
+
+  fprintf(fprad, "MODEL\n");
+  fprintf(fprad, "REMARK TIME = %f\n", time);
+  fprintf(fprad, "CRYST1%9.3f\n", p_parameters->rdf, "P 1", "1");
+  for (size_t i = 0; i < 1000; i++)
+  {
+    fprintf(fprad, "HETATM %5u  C 1 UNK     1    %7.4f\n", (unsigned int)i % 100000, p_parameters->rdf[i]);
+  }
+  fprintf(fprad, "ENDMDL\n");
+
+  fclose(fprad);
+}
+>>>>>>> Stashed changes

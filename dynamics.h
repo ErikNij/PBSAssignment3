@@ -26,7 +26,11 @@ double update_velocities_half_dt(struct Parameters *p_parameters, struct Nbrlist
  */
 void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
+<<<<<<< Updated upstream
 void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors);
+=======
+void Radialcalculation(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist);
+>>>>>>> Stashed changes
 
 
 /**

@@ -235,5 +235,8 @@ void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_ve
     }
 }
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes

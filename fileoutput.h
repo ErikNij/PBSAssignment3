@@ -19,6 +19,8 @@ void record_trajectories_pdb(int reset, struct Parameters * p_parameters, struct
  */
 void record_trajectories_xyz(int reset, struct Parameters * p_parameters, struct Vectors * p_vectors, double time);
 
+void record_radial(int reset, struct Parameters *p_parameters, struct Vectors *p_vectors, double time);
+
 /**
  * @brief Save a restart file
  * 

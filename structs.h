@@ -18,6 +18,7 @@ struct Vec3D
  */
 struct Parameters
 {
+<<<<<<< Updated upstream
     size_t num_part;         //!< Number of particles
     size_t num_dt_steps;     //!< Number of time steps
     double dt;               //!< integration time step
@@ -40,6 +41,36 @@ struct Parameters
     char filename_radial[1024];
     char load_restart;       //!< if equal 1 restart file is loaded
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
+=======
+    int Na;                   //!< Number of a particles in a bonded set
+    int Nb;                   //!< Number of b particles in a bonded set
+    double moleFrac;          //!< Mole fraction of part a vs part b (1 = all type a)
+    double resolutionDensity; // How much more smaller should the boxs be for the density?
+    size_t num_part;          //!< Number of particles
+    size_t num_dt_steps;      //!< Number of time steps
+    double dt;                //!< integration time step
+    struct Vec3D L;           //!< Box sizes in 3 direction
+    int exclude_12_nb;        //!< If true (=1) 1-2 connected atoms are exluded from non-bonded interactions
+    int exclude_13_nb;        //!< If true (-1) 1-3 connected atoms are exluded from non-bonded interactions
+    double kT;                //!< Thermal energy
+    double mass;              //!< Mass of a particle
+    double epsilon;           //!< LJ interaction strength
+    double sigma;             //!< LJ particle diameter
+    double r_cut;             //!< Cut-off distance for LJ interaction
+    double r_shell;           //!< Shell thickness for neighbor list
+    double rdf[3000];
+    double a_same;
+    double a_ab;
+    double gamma;
+    size_t num_dt_pdb;               //!< Number of time steps between pdb saves
+    double rescale_output;           //!< Rescale factor for outputted positions
+    char filename_pdb[1024];         //!< filename (without extension) for pdb file
+    char filename_xyz[1024];         //!< filename (without extension) for pdb file
+    char filename_rad[1024];
+    char load_restart;               //!< if equal 1 restart file is loaded
+    size_t num_dt_restart;
+    size_t num_dt_rad;           //!< Number of time steps between saves of restart file
+>>>>>>> Stashed changes
     char restart_in_filename[1024];  //!< filename for loaded restart file
     char restart_out_filename[1024]; //!< filename for saved restart file
 };

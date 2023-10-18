@@ -36,18 +36,32 @@ void set_parameters(struct Parameters *p_parameters)
 =======
   // The parameters below control core functionalities of the code, but many values will need to be changed
   p_parameters->num_part = 3000;                              // number of particles
+<<<<<<< Updated upstream
   p_parameters->N = 1;                                      // Number of molecules in a particle
   p_parameters->num_dt_steps = 2000;                        // number of time steps
+=======
+  p_parameters->Na = 1;                                      // Number of molecules in a particle of type A
+  p_parameters->Nb = 1;                                      // Number of molecules in a particle of type B
+  p_parameters->moleFrac = 0.5;                              // Mole fraction of part a vs part b (1 = all type a)
+  p_parameters->num_dt_rad = 100;
+  p_parameters->num_dt_steps = 20000;                         // number of time steps
+>>>>>>> Stashed changes
   p_parameters->exclude_12_nb = 0;                           // 1-2 connected atoms exluded from non-bonded interactions
   p_parameters->exclude_13_nb = 0;                           // 1-3 connected atoms exluded from non-bonded interactions
   p_parameters->dt = 1;                                  // integration time step
   p_parameters->L = (struct Vec3D){10.0, 10.0, 10.0};        // box size
   p_parameters->r_cut = 1;                                   // cut-off distance used for neigbor list
   p_parameters->r_shell = 0.4;                               // shell thickness for neighbor list
+<<<<<<< Updated upstream
   p_parameters->num_dt_pdb = 100;                            // number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");
   strcpy(p_parameters->filename_xyz, "Positions");         // filename (without extension) for pdb file
   strcpy(p_parameters->filename_radial, "Radial");
+=======
+  p_parameters->num_dt_pdb = 10;                             // number of time steps in between pdb outputs
+  strcpy(p_parameters->filename_pdb, "trajectories");        // filename (without extension) for pdb file
+  strcpy(p_parameters->filename_rad, "Radial"); 
+>>>>>>> Stashed changes
   p_parameters->rescale_output = 1;                          // factor used to rescale output lengthscale (Most visualisation programs identify bonds based on distances of order 1)
   p_parameters->load_restart = 0;                            // if equal 1 restart file is loaded
   strcpy(p_parameters->restart_in_filename, "restart.dat");  // filename for loaded restart file
